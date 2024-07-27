@@ -1,9 +1,8 @@
 import numpy as np
 from scipy.interpolate import CubicSpline
+from packages.helper import Inherit, Atk, Hp, Def, Er, Em, Amp
 from packages.base import complete
-from sympy import symbols, lambdify
-
-Atk, Hp, Def, Em, Er, Amp = symbols("Atk, Hp, Def, Em, Er, Amp")
+from sympy import lambdify
 
 lv = np.linspace(0, 100, 11)
 lv[0] = 1
@@ -11,21 +10,21 @@ dm = [17.165605, 34.143343, 80.584775, 136.29291, 207.382042, 323.601597, 492.88
 ReactionBase = CubicSpline(lv, dm, bc_type='natural')
 
 def override(a, b, missing = 0):
-    if(b == "inherit"):    # Inherit
+    if(b == Inherit):    # Inherit
         return a
     elif(b == missing):    # Missing
         return a
     else:                  # Override
         return b
     
-def override_mv(exp1, exp2):
-    if(exp2 == "inherit"):                            # Inherit
-        return exp1
+def override_exp(exp1, exp2):
+    if(exp2 == Inherit):                            # Inherit
+        return lambdify((Atk, Hp, Def, Em, Er, Amp), exp1)
     f = lambdify((Atk, Hp, Def, Em, Er, Amp), exp2)
     if f(1,2,3,4,5,6) == f(-6,-5,-4,-3,-2,1):         # Missing
-        return exp1
+        return lambdify((Atk, Hp, Def, Em, Er, Amp), exp1)
     else:                                             # Override
-        return exp2
+        return lambdify((Atk, Hp, Def, Em, Er, Amp), exp2)
 
 def validate(value:float, min:float = 0, max:float = 100):
     if value < min:
@@ -71,4 +70,4 @@ def_hsr = lambda Lv, Enemy_Lv, defShred, defIgnore: (20 + Lv) / ((20 + Enemy_Lv)
 
 damage = lambda base, flat, quicken, dmgBonus, defMultiplier, resMultiplier, customMultiplier: ((base + flat)*(1 + dmgBonus/100)+quicken)*defMultiplier*resMultiplier*customMultiplier
 
-deltaPerc = lambda this, origin, target: (target / origin - 1)*100
+deltaPerc = lambda origin, target: (target / origin - 1)*100

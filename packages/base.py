@@ -5,7 +5,7 @@ class partial:
         atkPercent, atkFlat,
         hpPercent, hpFlat,
         defPercent, defFlat,
-        dmgFlat, 
+        dmgFlat, quickenDmgBonus, amplifyDmgBonus,
         dmgBonusElemental, dmgBonusOther,
         critRate, critDmg,
         defShred, defIgnore,
@@ -24,6 +24,8 @@ class partial:
         this.defFlat = defFlat
     # Dmg Bonus
         this.dmgFlat = dmgFlat
+        this.quickenDmgBonus = quickenDmgBonus
+        this.amplifyDmgBonus = amplifyDmgBonus
         this.dmgBonusElemental = dmgBonusElemental
         this.dmgBonusOther = dmgBonusOther
     # Crit
@@ -33,9 +35,19 @@ class partial:
         this.defShred = defShred
         this.defIgnore = defIgnore
         this.resShred = resShred
+    def __str__(this):
+        return f"Buffs: \n\n\
+Atk%: {this.atkPercent}%\nAtk: {this.atkFlat}\n\
+Hp%: {this.hpPercent}%\nHp: {this.hpFlat}\n\
+Def%: {this.defPercent}%\nDef: {this.defFlat}\n\
+Dmg Bonus: {this.dmgBonusElemental + this.dmgBonusOther}%\nDmg Flat: {this.dmgFlat}\n\
+Crit Rate: {this.critRate}%\nCrit Dmg: {this.critDmg}%\n\
+Quicken Dmg Bonus: {this.quickenDmgBonus}%\nAmplify Dmg Bonus: {this.amplifyDmgBonus}%\n\
+Def Shred: {this.defShred}\nDef Ignore:{this.defIgnore}\n\
+Res Shred: {this.resShred}%\n\
+"
 
 class complete(partial):
-    label = ""
     def __init__(
         this, 
         level, calculationMode,
