@@ -1,7 +1,7 @@
 from packages.base import *
 from packages.utils import *
 
-class stats:
+class stats(complete):
     label = ""
     atk_ = 0
     hp_ = 0
@@ -21,6 +21,9 @@ class stats:
     defMultiplier = 1
     resMultiplier = 1
     customMultiplier = 1
+    
+    def __init__(this):
+        return
     
     def display(this):
         print(f"Atk = {this.atk_}\nHp = {this.hp_}\nDef = {this.def_}\nER = {this.energyRecharge}\nEM = {this.elementalMastery}\nDmg Bonus = {this.dmgBonus}\nCrit Rate = {this.critRate}\nCrit Damage = {this.critDmg}\nDmg Non Crit = {this.dmgNoCrit}\nDmg Average = {this.dmgAvg}\nDmg Crit = {this.dmgCrit}")
@@ -49,6 +52,10 @@ class stats:
         this.critDmg += (convertToCritDmg(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
     
     def calculate(this, base:complete, custom:complete, buff:partial):
+        buffStatus = override(base.buffStatus, custom.buffStatus,-1)
+        if buffStatus == False:
+            buff = partial(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+            
         this.atk_ = override(base.atkBase, custom.atkBase)*(100 + base.atkPercent + custom.atkPercent + buff.atkPercent)/100 + base.atkFlat + custom.atkFlat + buff.atkFlat
         this.hp_ = override(base.hpBase, custom.hpBase)*(100 + base.hpPercent + custom.hpPercent + buff.hpPercent)/100 + base.hpFlat + custom.hpFlat + buff.hpFlat
         this.def_ = override(base.defBase, custom.defBase)*(100 + base.defPercent + custom.defPercent + buff.defPercent)/100 + base.defFlat + custom.defFlat + buff.defFlat
@@ -62,8 +69,8 @@ class stats:
         this.critRate = validate(base.critRate + custom.critRate + buff.critRate)
         this.critDmg = base.critDmg + custom.critDmg + buff.critDmg
         
-        this.amplifyMultiplier = amplify(base, custom, this.elementalMastery)
-        this.quickenIncrease = quicken(base, custom, this.elementalMastery, this.dmgBonus)
+        this.amplifyMultiplier = amplify(base, custom, buff, this.elementalMastery)
+        this.quickenIncrease = quicken(base, custom, buff, this.elementalMastery, this.dmgBonus)
         
         this.convert(base, custom)
         

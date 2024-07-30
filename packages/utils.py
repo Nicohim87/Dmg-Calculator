@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import CubicSpline
 from packages.helper import Inherit, Atk, Hp, Def, Er, Em, Amp
-from packages.base import complete
+from packages.base import complete, partial
 from sympy import lambdify
 
 lv = np.linspace(0, 100, 11)
@@ -26,6 +26,13 @@ def override_exp(exp1, exp2):
     else:                                             # Override
         return lambdify((Atk, Hp, Def, Em, Er, Amp), exp2)
 
+def countTotal(data:list[complete]):
+    count = 0
+    for i in data:
+        if i.label != "":
+            count += 1
+    return count
+
 def validate(value:float, min:float = 0, max:float = 100):
     if value < min:
         return min
@@ -37,22 +44,22 @@ def validate(value:float, min:float = 0, max:float = 100):
 multiplicative = lambda EM: 278*EM / (EM + 1400)
 additive = lambda EM: 500*EM / (EM + 1200)
 
-def amplify(base:complete, custom:complete, EM:float):
+def amplify(base:complete, custom:complete, buff:partial, EM:float):
     amplifyType = override(base.amplifyType, custom.amplifyType)
-    amplifyBonus = base.amplifyDmgBonus + custom.amplifyDmgBonus
+    amplifyBonus = base.amplifyDmgBonus + custom.amplifyDmgBonus + buff.amplifyDmgBonus
     if(amplifyType == 0 or amplifyType == 1):
         return 1
     else:
         return amplifyType * (1 + amplifyBonus + multiplicative(EM))/100 
 
-def quicken(base:complete, custom:complete, EM:float, dmgBonus:float):
+def quicken(base:complete, custom:complete, buff:partial, EM:float, dmgBonus:float):
     quickenType = override(base.quickenType, custom.quickenType)
-    quickenBonus = base.quickenDmgBonus + custom.quickenDmgBonus
+    quickenBonus = base.quickenDmgBonus + custom.quickenDmgBonus + buff.quickenDmgBonus
     amt = base.quickenCount + custom.quickenCount
     if(quickenType == 0):
         return 0
     else:
-        return ReactionBase*quickenType*(1 + dmgBonus + quickenBonus)/100
+        return ReactionBase*quickenType*(1 + dmgBonus + quickenBonus)/100*amt
     
 def res_genshin(base, reduction):
     res = (base - reduction)/100

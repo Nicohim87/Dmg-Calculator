@@ -117,3 +117,6 @@ class complete(partial):
         this.convertToCritDmg = convertToCritDmg
     # Buff
         this.buffStatus = buffStatus
+    
+    def __str__(this):
+        return ""
