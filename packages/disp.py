@@ -68,8 +68,8 @@ def plot(data:list[complete], origin):
             
         df['percentage'].extend([
             deltaPerc(data[origin-1].dmgCrit, data[i].dmgCrit)+100,
-            deltaPerc(data[origin-1].dmgAvg, data[i].dmgAvg)+100,
-            deltaPerc(data[origin-1].dmgNoCrit, data[i].dmgNoCrit)+100
+            deltaPerc(data[origin-1].dmgNoCrit, data[i].dmgNoCrit)+100,
+            deltaPerc(data[origin-1].dmgAvg, data[i].dmgAvg)+100
         ])
         df['type'].extend(["Crit", "Non-Crit", "Average"])
         df['label'].extend([data[i].label]*3)
