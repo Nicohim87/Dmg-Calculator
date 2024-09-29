@@ -1,4 +1,5 @@
 class partial:
+    # For other purposes which complements Complete class
     def __init__(
         this,
         elementalMastery, energyRecharge, 
@@ -48,23 +49,24 @@ Res Shred: {this.resShred}%\n\
 "
 
 class complete(partial):
+    # Primary type of data which is stored
     def __init__(
         this, 
-        level, calculationMode,
-        elementalMastery, energyRecharge, 
-        atkBase, atkPercent, atkFlat,
-        hpBase, hpPercent, hpFlat,
-        defBase, defPercent, defFlat,
-        motionValue, dmgFlat, 
-        dmgBonusElemental, dmgBonusOther,
-        critRate, critDmg,
-        quickenType, quickenDmgBonus, quickenCount,
-        amplifyType, amplifyDmgBonus,
-        customMultiplier,
-        levelEnemy, resBase, resShred,
-        defShred, defIgnore,
-        convertToAtk, convertToHp, convertToDef, convertToER, convertToEM, 
-        convertToDmgFlat, convertToDmgBonus, convertToCritRate, convertToCritDmg, buffStatus
+        level = 0, calculationMode = 0,
+        elementalMastery = 0, energyRecharge = 0, 
+        atkBase = 0, atkPercent = 0, atkFlat = 0,
+        hpBase = 0, hpPercent = 0, hpFlat = 0,
+        defBase = 0, defPercent = 0, defFlat = 0,
+        motionValue = 0, dmgFlat = 0, 
+        dmgBonusElemental = 0, dmgBonusOther = 0,
+        critRate = 0, critDmg = 0,
+        quickenType = 0, quickenDmgBonus = 0, quickenCount = 0,
+        amplifyType = 0, amplifyDmgBonus = 0,
+        customMultiplier = 0,
+        levelEnemy = 0, resBase = 0, resShred = 0,
+        defShred = 0, defIgnore = 0,
+        convertToAtk = 0, convertToHp = 0, convertToDef = 0, convertToER = 0, convertToEM = 0, 
+        convertToDmgFlat = 0, convertToDmgBonus = 0, convertToCritRate = 0, convertToCritDmg = 0, buffStatus = 0
         ):
         
         this.level = level
@@ -117,6 +119,6 @@ class complete(partial):
         this.convertToCritDmg = convertToCritDmg
     # Buff
         this.buffStatus = buffStatus
-    
+
     def __str__(this):
         return ""

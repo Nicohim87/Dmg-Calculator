@@ -4,13 +4,19 @@ from packages.helper import Inherit, Atk, Hp, Def, Er, Em, Amp
 from packages.base import complete, partial
 from sympy import lambdify
 
+# Calculating base reaction dmg based on level using cubic spline interpolation
 lv = np.linspace(0, 100, 11)
 lv[0] = 1
 dm = [17.165605, 34.143343, 80.584775, 136.29291, 207.382042, 323.601597, 492.88489, 765.640231, 1077.443668, 1446.853458, 2030.071808]
 ReactionBase = CubicSpline(lv, dm, bc_type='natural')
 
+def format_num(x, y=0):
+    # Number formatting function for display
+    return f"{x:,.0f}"
+
 def override(a, b, missing = 0):
-    if(b == Inherit):    # Inherit
+    # Overriding for specific stats
+    if(b == Inherit):      # Inherit
         return a
     elif(b == missing):    # Missing
         return a
@@ -18,6 +24,8 @@ def override(a, b, missing = 0):
         return b
     
 def override_exp(exp1, exp2):
+    # Override function for lambda function
+    # Not always correct, but mostly fine
     if(exp2 == Inherit):                            # Inherit
         return lambdify((Atk, Hp, Def, Em, Er, Amp), exp1)
     f = lambdify((Atk, Hp, Def, Em, Er, Amp), exp2)
@@ -27,6 +35,7 @@ def override_exp(exp1, exp2):
         return lambdify((Atk, Hp, Def, Em, Er, Amp), exp2)
 
 def countTotal(data:list[complete]):
+    # Count the total amount of datas inside the storage
     count = 0
     for i in data:
         if i.label != "":
@@ -34,6 +43,7 @@ def countTotal(data:list[complete]):
     return count
 
 def validate(value:float, min:float = 0, max:float = 100):
+    # Gives a limit of values like crit rate where it cannot go over 100 or below 0
     if value < min:
         return min
     elif value > max:
@@ -41,27 +51,31 @@ def validate(value:float, min:float = 0, max:float = 100):
     else:
         return value
     
+# EM Reaction bonus
 multiplicative = lambda EM: 278*EM / (EM + 1400)
 additive = lambda EM: 500*EM / (EM + 1200)
 
-def amplify(base:complete, custom:complete, buff:partial, EM:float):
+def amplify(base:complete, custom:complete, buff:partial, stdError:complete, EM:float):
+    # Calculating reaction multiplier for Vape and Melt
     amplifyType = override(base.amplifyType, custom.amplifyType)
-    amplifyBonus = base.amplifyDmgBonus + custom.amplifyDmgBonus + buff.amplifyDmgBonus
+    amplifyBonus = base.amplifyDmgBonus + custom.amplifyDmgBonus + buff.amplifyDmgBonus + stdError.amplifyDmgBonus
     if(amplifyType == 0 or amplifyType == 1):
         return 1
     else:
         return amplifyType * (1 + amplifyBonus + multiplicative(EM))/100 
 
-def quicken(base:complete, custom:complete, buff:partial, EM:float, dmgBonus:float):
+def quicken(base:complete, custom:complete, buff:partial, stdError:complete, EM:float, dmgBonus:float):
+    # Calculate flat dmg bonus for Quicken (Aggravate and Spread)
     quickenType = override(base.quickenType, custom.quickenType)
-    quickenBonus = base.quickenDmgBonus + custom.quickenDmgBonus + buff.quickenDmgBonus
+    quickenBonus = base.quickenDmgBonus + custom.quickenDmgBonus + buff.quickenDmgBonus + stdError.quickenDmgBonus
     amt = base.quickenCount + custom.quickenCount
     if(quickenType == 0):
         return 0
     else:
-        return ReactionBase*quickenType*(1 + dmgBonus + quickenBonus)/100*amt
+        return ReactionBase(override(base.level, custom.level))*additive(EM)*quickenType*(1 + dmgBonus + quickenBonus)/100*amt
     
 def res_genshin(base, reduction):
+    # Resistance formula for Genshin
     res = (base - reduction)/100
     if res < 0:
         return (1 - 0.5*res)
@@ -70,11 +84,16 @@ def res_genshin(base, reduction):
     else:
         return (1 - res)
     
+#Resistance formula for HSR
 res_hsr = lambda base, reduction: (100 - base + reduction)/100
-    
+
+# Defense formula for Genshin
 def_genshin = lambda Lv, Enemy_Lv, defShred, defIgnore: (100 + Lv) / (200 + Lv + Enemy_Lv)*(1 - defShred)*(1 - defIgnore)
+# Defense formula for HSR
 def_hsr = lambda Lv, Enemy_Lv, defShred, defIgnore: (20 + Lv) / ((20 + Enemy_Lv)*(100 - defShred - defIgnore)/100 + (20 + Lv))
 
+# Damage calculation before crit, res, and def multiplier
 damage = lambda base, flat, quicken, dmgBonus, defMultiplier, resMultiplier, customMultiplier: ((base + flat)*(1 + dmgBonus/100)+quicken)*defMultiplier*resMultiplier*customMultiplier
 
+# Calculate the improvement of variable after certain operation
 deltaPerc = lambda origin, target: (target / origin - 1)*100
