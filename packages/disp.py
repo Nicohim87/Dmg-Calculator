@@ -109,7 +109,7 @@ def plot(data:list[complete], origin):
     
     # Using gridSpec with figsize of 16,9 to generate a cluster of compacted plots
     fig = plt.figure(figsize=(16,9))
-    gs = gridspec(7,4, width_ratios=[1,1,.05,2])
+    gs = gridspec.GridSpec(7,4, width_ratios=[1,1,.05,2])
     gs.update(wspace=0.1, hspace=1)
     
     # Zeroing and initialization

@@ -102,7 +102,7 @@ class stats(complete):
         
         # Motion value and base damage
         motionValue = override_exp(base.motionValue, custom.motionValue)
-        dmg_ = motionValue(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, this.amplifyMultiplier)
+        this.dmg_ = motionValue(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, this.amplifyMultiplier)
         
         # Enemy Defense stats calculation
         lv = override(base.level, custom.level)
@@ -116,6 +116,9 @@ class stats(complete):
         
         # Custom multiplier for generality
         this.customMultiplier = override(base.customMultiplier, custom.customMultiplier)
+        if this.customMultiplier == 0:
+            this.customMultiplier = 1
+            
         
         # Calculate the def and res multiplier based on game
         # 0 for Genshin Impact
@@ -132,7 +135,7 @@ class stats(complete):
             this.resMultiplier = res_genshin(resBase, resShred)
         
         # Critical damage calculations
-        this.dmgNoCrit = damage(dmg_, this.dmgFlat, this.quickenIncrease, this.dmgBonus, this.defMultiplier, this.resMultiplier, this.customMultiplier)/100
+        this.dmgNoCrit = damage(this.dmg_, this.dmgFlat, this.quickenIncrease, this.dmgBonus, this.defMultiplier, this.resMultiplier, this.customMultiplier)/100
         this.dmgCrit = this.dmgNoCrit*(100 + this.critDmg)/100
         this.dmgAvg = (this.critRate*this.dmgCrit + (1 - this.critRate/100)*this.dmgNoCrit)/100
         
