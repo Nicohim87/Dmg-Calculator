@@ -51,6 +51,25 @@ def validate(value:float, min:float = 0, max:float = 100):
     else:
         return value
     
+def rangify(arr):
+    data = [arr[0]]
+    for i in range(1, len(arr)):
+        data.append(arr[i]-arr[i-1])
+    return data
+    
+def confidenceInterval95(min_v, max_v, theta, n_samples=100):
+    theta /= 100 # Proportion
+    Z_score = 1.96
+    
+    # Confidence Interval Range
+    ci_range = Z_score * np.sqrt(theta*(1-theta)/n_samples)
+    
+    # Minimum and maximum proportion, truncate between 0 and 1
+    min_rate = max(0, theta - ci_range)
+    max_rate = min(1, theta + ci_range)
+    
+    return min_v * (1-min_rate) + max_v * min_rate, min_v * (1-max_rate) + max_v * max_rate
+
 # EM Reaction bonus
 multiplicative = lambda EM: 278*EM / (EM + 1400)
 additive = lambda EM: 500*EM / (EM + 1200)

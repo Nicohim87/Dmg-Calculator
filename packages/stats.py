@@ -137,7 +137,7 @@ class stats(complete):
         # Critical damage calculations
         this.dmgNoCrit = damage(this.dmg_, this.dmgFlat, this.quickenIncrease, this.dmgBonus, this.defMultiplier, this.resMultiplier, this.customMultiplier)/100
         this.dmgCrit = this.dmgNoCrit*(100 + this.critDmg)/100
-        this.dmgAvg = (this.critRate*this.dmgCrit + (1 - this.critRate/100)*this.dmgNoCrit)/100
+        this.dmgAvg = (this.critRate/100*this.dmgCrit + (1 - this.critRate/100)*this.dmgNoCrit)
         
         # Error Calculation
         if Error == True :
