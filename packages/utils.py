@@ -25,11 +25,7 @@ def override(a, b, missing = 0):
     
 def override_exp(exp1, exp2):
     # Override function for lambda function
-    # Not always correct, but mostly fine
-    if(exp2 == Inherit):                            # Inherit
-        return lambdify((Atk, Hp, Def, Em, Er, Amp), exp1)
-    f = lambdify((Atk, Hp, Def, Em, Er, Amp), exp2)
-    if f(1,2,3,4,5,6) == f(-6,-5,-4,-3,-2,1):         # Missing
+    if(exp2 == Inherit or exp2 == 0):                 # Inherit, Missing
         return lambdify((Atk, Hp, Def, Em, Er, Amp), exp1)
     else:                                             # Override
         return lambdify((Atk, Hp, Def, Em, Er, Amp), exp2)
@@ -81,7 +77,8 @@ def amplify(base:complete, custom:complete, buff:partial, stdError:complete, EM:
     if(amplifyType == 0 or amplifyType == 1):
         return 1
     else:
-        return amplifyType * (1 + amplifyBonus + multiplicative(EM))/100 
+        print(100+amplifyBonus+multiplicative(EM))
+        return amplifyType * (100 + amplifyBonus + multiplicative(EM))/100 
 
 def quicken(base:complete, custom:complete, buff:partial, stdError:complete, EM:float, dmgBonus:float):
     # Calculate flat dmg bonus for Quicken (Aggravate and Spread)

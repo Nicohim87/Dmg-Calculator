@@ -1,4 +1,4 @@
-from sympy import symbols
+from sympy import symbols, Min, Max
 
 Atk, Hp, Def, Em, Er, Amp = symbols("Atk, Hp, Def, Em, Er, Amp")
 

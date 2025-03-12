@@ -2,9 +2,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import ticker, gridspec
 import seaborn as sns
-import plotly.graph_objects as go
-import plotly.express as px
-from plotly.subplots import make_subplots
 
 from packages.base import complete
 import packages.datamanip as dm

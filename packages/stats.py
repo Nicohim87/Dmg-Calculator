@@ -45,16 +45,16 @@ class stats(complete):
         convertToCritRate = override_exp(base.convertToCritRate, custom.convertToCritRate)
         convertToCritDmg = override_exp(base.convertToCritDmg, custom.convertToCritDmg)
         
-        this.atk_ += (convertToAtk(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
-        this.hp_ += (convertToHp(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
-        this.def_ += (convertToDef(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
-        this.energyRecharge += (convertToER(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
-        this.elementalMastery += (convertToEM(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
+        this.atk_ += (convertToAtk(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, 0))
+        this.hp_ += (convertToHp(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, 0))
+        this.def_ += (convertToDef(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, 0))
+        this.energyRecharge += (convertToER(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, 0))
+        this.elementalMastery += (convertToEM(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, 0))
         
-        this.dmgFlat += (convertToDmgFlat(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
-        this.dmgBonus += (convertToDmgBonus(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
-        this.critRate += (convertToCritRate(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
-        this.critDmg += (convertToCritDmg(this.atk_, this.hp_, this.def_, this.energyRecharge, this.elementalMastery, 0))
+        this.dmgFlat += (convertToDmgFlat(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, 0))
+        this.dmgBonus += (convertToDmgBonus(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, 0))
+        this.critRate += (convertToCritRate(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, 0))
+        this.critDmg += (convertToCritDmg(this.atk_, this.hp_, this.def_, this.elementalMastery, this.energyRecharge, 0))
         
     
     def calculate(this, base:complete, custom:complete, buff:partial, Error:bool = True):
